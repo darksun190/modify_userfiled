@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QSettings setting(".\\config.ini",QSettings::IniFormat);
 
     fileName = setting.value("filename").toString();
-    //qDebug()<<fileName;
 
     QFile origin_name(fileName);
     if (!origin_name.exists())
@@ -42,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     origin_name.setPermissions(QFile::Permission(0x7777));
     origin_name.remove("./qt_settings_format.ini");
-    qDebug()<<origin_name.copy("./qt_settings_format.ini");
+    origin_name.copy("./qt_settings_format.ini");
 
     QFile temp_file("./qt_settings_format.ini");
     temp_file.setPermissions(QFile::Permission(0x7777));
@@ -55,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QString str;
     foreach(str,all_list)
     {
-        //qDebug()<<str;
         calypso->beginGroup(str);
         QStringList sub_list = calypso->childKeys();
         calypso->endGroup();
@@ -64,8 +62,6 @@ MainWindow::MainWindow(QWidget *parent) :
         else
             u_value_list.push_back(str);
     }
-   // qDebug()<<u_field_list;
-   // qDebug()<<u_value_list;
 
     int i=0;
     QString str_u;
@@ -79,16 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
         i++;
     }
 
-       /*
-    qDebug()<<calypso->allKeys();
-
-    qDebug()<<calypso->childGroups();
-    qDebug()<<calypso->childKeys();
-    qDebug()<<calypso->group();
-    */
-    qDebug()<<ui->tableWidget_2->currentIndex();
     ui->tableWidget_2->setCurrentCell(0,0);
-    qDebug()<<ui->tableWidget_2->currentRow();
     ui->tableWidget_2->blockSignals(false);
     {
         //display the first u_field
@@ -106,17 +93,12 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
         ui->lineEdit_3->clear();
-        qDebug()<<"setcurrent OK";
-        qDebug()<<ui->tableWidget_2->rowCount();
-        qDebug()<<ui->tableWidget_2->currentRow();
         str = ui->tableWidget_2->currentItem()->text();
-        qDebug()<<"setcurrent OK";
 
         if (!calypso->childGroups().contains(str))
             return;
         calypso->beginGroup(str);
         ui->lineEdit->setText(calypso->value("name").toString());
-        //qDebug()<<calypso->value("editMode").toBool();
         if (calypso->value("editMode").toBool())
             ui->checkBox1->setChecked(true);
         else
@@ -215,7 +197,6 @@ void MainWindow::on_AddButton1_clicked()
 
     QTableWidgetItem *new_item = new QTableWidgetItem(str);
     ui->tableWidget_2->setItem(j,0,new_item);
-    qDebug()<<"what happend    "<<j<<"  "<<ui->tableWidget_2->rowCount();
     ui->tableWidget_2->setCurrentCell(j,0);
     calypso->beginGroup(str);
     calypso->setValue("name",str);
@@ -297,11 +278,8 @@ void MainWindow::on_tableWidget_2_currentItemChanged(QTableWidgetItem *current, 
     if (!calypso->childGroups().contains(str))
         return;
     calypso->beginGroup(str);
-    qDebug()<<calypso->value("name").toString()
-           <<calypso->value("selectiveListValues").toString();
 
     ui->lineEdit->setText(calypso->value("name").toString());
-    //qDebug()<<calypso->value("editMode").toBool();
     if (calypso->value("editMode").toBool())
         ui->checkBox1->setChecked(true);
     else
@@ -438,22 +416,13 @@ void MainWindow::on_pushButton_clicked()
     calypso->sync();
 
     QString buf;
- /*   QTime time;
-    qDebug()<<time.currentTime().toString();
-    QThread *process = new QThread(QThread::currentThread());
-    process->start();
-    process->wait(1000);
-    qDebug()<<QThread::currentThread();
-    process->terminate();
-    qDebug()<<time.currentTime().toString();
- */
+
     while(1)
     {
         buf = in.readLine();
         if (buf.isNull())
             break;
         out<<buf<<"\n";
-        //qDebug()<<buf;
     }
 
 
@@ -471,8 +440,6 @@ void MainWindow::on_tableWidget_2_cellChanged(int row, int column)
     QString old_name = u_field_list.at(row);
     QString new_name = ui->tableWidget_2->item(row,column)->text();
     u_field_list[row]=new_name;
-    qDebug()<<old_name;
-    qDebug()<<new_name;
 
     calypso->setValue(QString("%1/name").arg(new_name),calypso->value(QString("%1/name").arg(old_name)));
     calypso->setValue(QString("%1/editMode").arg(new_name),calypso->value(QString("%1/editMode").arg(old_name)));
