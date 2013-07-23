@@ -36,8 +36,14 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowTitle("Userfields Interface");
     init_flag=0;
     //ui->tableWidget->hideColumn(0);
+    QFile config_file(".\\config.ini");
+
     QSettings setting(".\\config.ini",QSettings::IniFormat);
 
+    if (!config_file.exists() || setting.status() != QSettings::NoError)
+    {
+        setting.setValue("filename","C:/program Files (x86)/Zeiss/CALYPSO 5.4/opt/om/protform/userfields.ini");
+    }
     fileName = setting.value("filename").toString();
 
     QFile origin_name(fileName);
