@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo.bmp</file>
+        <file>userfields.ini</file>
+    </qresource>
+</RCC>
