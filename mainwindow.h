@@ -17,7 +17,13 @@
 #include <QPicture>
 #include <QColor>
 #include <QMessageBox>
-
+class CTableWidgetItem: public QTableWidgetItem
+{
+    public:
+        CTableWidgetItem();
+        CTableWidgetItem(const QString &text,int type= Type):QTableWidgetItem( text,type){};
+        virtual bool operator<(const QTableWidgetItem &item) const;
+};
 namespace Ui {
 class MainWindow;
 }
@@ -63,5 +69,6 @@ private:
     Ui::MainWindow *ui;
     void paintEvent(QPaintEvent *);
 };
+
 
 #endif // MAINWINDOW_H

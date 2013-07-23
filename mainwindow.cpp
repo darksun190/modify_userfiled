@@ -2,6 +2,19 @@
 #include "ui_mainwindow.h"
 
 
+CTableWidgetItem::CTableWidgetItem()
+{
+}
+
+bool CTableWidgetItem::operator<(const QTableWidgetItem &item) const
+{
+    if(text().toUpper()<item.text().toUpper())
+        return true;
+    else
+        return false;
+}
+
+
 bool intmorethan(const QString &s1, const QString &s2)
 {
     if (s1.length()==s2.length())
@@ -46,10 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QFile temp_file("./qt_settings_format.ini");
     temp_file.setPermissions(QFile::Permission(0x7777));
     calypso = new QSettings("./qt_settings_format.ini",QSettings::IniFormat);
-    u_field_list;
-    u_value_list;
 
-    all_list;
     all_list = calypso->childGroups();
     QString str;
     foreach(str,all_list)
@@ -69,8 +79,8 @@ MainWindow::MainWindow(QWidget *parent) :
     foreach(str_u,u_field_list)
     {
         ui->tableWidget_2->insertRow(i);
-        QTableWidgetItem *u_item;
-        u_item = new QTableWidgetItem (str_u);
+        CTableWidgetItem *u_item;
+        u_item = new CTableWidgetItem (str_u);
         ui->tableWidget_2->setItem(i,0,u_item);
         i++;
     }
@@ -144,8 +154,8 @@ MainWindow::MainWindow(QWidget *parent) :
             foreach(temp,sorted_list)
             {
                 ui->tableWidget->insertRow(i);
-                QTableWidgetItem *keyitem = new QTableWidgetItem(temp);
-                QTableWidgetItem *valueitem = new QTableWidgetItem(calypso->value(temp).toString());
+                CTableWidgetItem *keyitem = new CTableWidgetItem(temp);
+                CTableWidgetItem *valueitem = new CTableWidgetItem(calypso->value(temp).toString());
                 ui->tableWidget->setItem(i,0,keyitem);
                 ui->tableWidget->setItem(i,1,valueitem);
 
@@ -163,6 +173,8 @@ MainWindow::MainWindow(QWidget *parent) :
     do_display = true;
     QPixmap pixpic(":/logo.bmp");
     ui->label_13->setPixmap(pixpic);
+    ui->tableWidget_2->sortItems(0);
+    ui->tableWidget_2->setCurrentCell(0,0);
 }
 
 MainWindow::~MainWindow()
@@ -195,7 +207,7 @@ void MainWindow::on_AddButton1_clicked()
     QString str("u_newfield");
     str.append(QString::number(j+1));
 
-    QTableWidgetItem *new_item = new QTableWidgetItem(str);
+    CTableWidgetItem *new_item = new CTableWidgetItem(str);
     ui->tableWidget_2->setItem(j,0,new_item);
     ui->tableWidget_2->setCurrentCell(j,0);
     calypso->beginGroup(str);
@@ -325,8 +337,8 @@ void MainWindow::on_tableWidget_2_currentItemChanged(QTableWidgetItem *current, 
         foreach(temp,sorted_list)
         {
             ui->tableWidget->insertRow(i);
-            QTableWidgetItem *keyitem = new QTableWidgetItem(temp);
-            QTableWidgetItem *valueitem = new QTableWidgetItem(calypso->value(temp).toString());
+            CTableWidgetItem *keyitem = new CTableWidgetItem(temp);
+            CTableWidgetItem *valueitem = new CTableWidgetItem(calypso->value(temp).toString());
             ui->tableWidget->setItem(i,0,keyitem);
             ui->tableWidget->setItem(i,1,valueitem);
 
@@ -352,8 +364,8 @@ void MainWindow::on_AddButton2_clicked()
 {
     ui->tableWidget->insertRow(ui->tableWidget->rowCount());
     QString str("new_value");
-    QTableWidgetItem *new_item = new QTableWidgetItem(str);
-    QTableWidgetItem *key_item = new QTableWidgetItem(QString::number(ui->tableWidget->rowCount()));
+    CTableWidgetItem *new_item = new CTableWidgetItem(str);
+    CTableWidgetItem *key_item = new CTableWidgetItem(QString::number(ui->tableWidget->rowCount()));
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1,new_item);
     ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0,key_item);
     calypso->beginGroup(ui->lineEdit_2->text());
