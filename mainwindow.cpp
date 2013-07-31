@@ -250,6 +250,18 @@ void MainWindow::on_tableWidget_2_currentItemChanged(QTableWidgetItem *current, 
         calypso->setValue("editable",ui->checkBox4->isChecked());
         calypso->setValue("defaultValue",ui->lineEdit_3->text());
         calypso->endGroup();
+        if (ui->checkBox3->isChecked() && !ui->lineEdit_3->text().isNull())
+        {
+            calypso->beginGroup(ui->lineEdit_2->text());
+            calypso->remove("");
+            for (int i=0;i<ui->tableWidget->rowCount();++i)
+            {
+                QString keyname = ui->tableWidget->item(i,0)->text();
+                QString valuename = ui->tableWidget->item(i,1)->text();
+                calypso->setValue(keyname,valuename);
+            }
+            calypso->endGroup();
+        }
     }
     else
     {
@@ -271,7 +283,7 @@ void MainWindow::on_tableWidget_2_currentItemChanged(QTableWidgetItem *current, 
 
     //display the new u_field
 
-    ui->tableWidget_2->setCurrentItem(current);
+    //ui->tableWidget_2->setCurrentItem(current);
     QString str;
     bool setlist;
     QString list_name;
@@ -402,7 +414,18 @@ void MainWindow::on_pushButton_clicked()
     calypso->setValue("editable",ui->checkBox4->isChecked());
     calypso->setValue("defaultValue",ui->lineEdit_3->text());
     calypso->endGroup();
-
+    if (ui->checkBox3->isChecked() && !ui->lineEdit_3->text().isNull())
+    {
+        calypso->beginGroup(ui->lineEdit_2->text());
+        calypso->remove("");
+        for (int i=0;i<ui->tableWidget->rowCount();++i)
+        {
+            QString keyname = ui->tableWidget->item(i,0)->text();
+            QString valuename = ui->tableWidget->item(i,1)->text();
+            calypso->setValue(keyname,valuename);
+        }
+        calypso->endGroup();
+    }
 
 
     //start to write userfields.ini
